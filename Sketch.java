@@ -4,6 +4,7 @@ public class Sketch extends PApplet {
   PImage img;
   float [] snowX = new float[42];
   float [] snowY = new float [42];
+  boolean[] blnHideStatus = new boolean[42];
   int snowDiameter = 10;
   
   public void settings() {
@@ -17,6 +18,7 @@ public class Sketch extends PApplet {
   boolean aPressed = false;
   boolean sPressed = false;
   boolean dPressed = false;
+
   int playerLives = 3;
   public void setup() {
 
@@ -59,9 +61,10 @@ public class Sketch extends PApplet {
 
     fill(255);
     for (int i = 0; i < snowX.length; i++) {
+      if (!blnHideStatus[i]) {
       circle(snowX[i], snowY[i], snowDiameter);
       snowY[i] +=1;
-
+      }
 
       if (collision(imgX + 25, imgY + 25, snowX[i], snowY[i], 25, snowDiameter)) {
         // Decrement player lives if collision occurs
@@ -72,7 +75,7 @@ public class Sketch extends PApplet {
 
 
      if (upPressed) {
-      snowY[i] -=1;
+      snowY[i] -=0.5;
      }
 
      if (downPressed) {
@@ -99,12 +102,6 @@ public class Sketch extends PApplet {
   if (snowY[i] > height) {
     snowY[i] = 0;
   }
-
-  
-
-
-
-
 
   }
  
@@ -157,6 +154,13 @@ public class Sketch extends PApplet {
       dPressed = false;
     }
   }
+  public void mousePressed() {
+    for (int i = 0; i < snowX.length; i++) {
+      if (dist(snowX[i], snowY[i], mouseX, mouseY) < snowDiameter) {
+        blnHideStatus[i] = true;
+      }
+    }
+  }
 
   public boolean collision(float x1, float y1, float x2, float y2, float r1, float r2) {
     float dx = x1 - x2;
@@ -166,6 +170,7 @@ public class Sketch extends PApplet {
   
   }
   public void drawPlayerLives() {
+    
     for (int i = 0; i < playerLives; i++) {
         float x = width - 50 + i * 20;
         float y = 20;
@@ -174,3 +179,4 @@ public class Sketch extends PApplet {
   
   }
 }
+
